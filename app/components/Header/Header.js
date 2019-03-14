@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -14,7 +15,7 @@ class Header extends Component { // eslint-disable-line react/prefer-stateless-f
             <Typography variant="h6" color="inherit" className="grow">
               The Corner Bookstore
             </Typography>
-            <Button color="inherit">Login</Button>
+            <Button color="inherit" component={Link} to="/login">Login</Button>
           </Toolbar>
         </AppBar>
       </div>
