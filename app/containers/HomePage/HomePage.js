@@ -22,11 +22,31 @@ class HomePage extends Component {
   }
 
   render() {
-    const { classes, items, isLoadingItems } = this.props;
+    const {
+      classes, inventoryItems, isLoadingItems, cartAddItemSingle, cartRemoveItemSingle,
+      cartItems,
+    } = this.props;
 
     if (isLoadingItems) {
       return LoadingIndicator();
     }
+
+    const cartItemsObject = {};
+    cartItems.toJS().forEach((item) => {
+      const { _id: id } = item;
+      cartItemsObject[id] = { ...item };
+    });
+
+    // update qty in inventory items to reflect cart qty instead of stock qty
+    const items = inventoryItems.toJS().map((item) => {
+      const { _id: id } = item;
+      const cartQty = cartItemsObject[id] === undefined ? 0 : cartItemsObject[id].qty;
+      return {
+        ...item,
+        qty: cartQty,
+        isSoldOut: item.qty === 0,
+      };
+    });
 
     return (
       <React.Fragment>
@@ -41,9 +61,8 @@ class HomePage extends Component {
         <main>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40}>
-              {items.toJS().map((item) => {
-                const isSoldOut = item.qty === 0;
-                const { _id: id } = item;
+              {items.map((item) => {
+                const { _id: id, isSoldOut } = item;
 
                 // @TODO refactor to a separate component
                 return (
@@ -74,17 +93,21 @@ class HomePage extends Component {
                             <IconButton
                               className={classes.button}
                               aria-label="Remove"
-                              disabled={isSoldOut}
+                              onClick={() => {
+                                cartRemoveItemSingle(id);
+                              }}
                             >
                               <RemoveIcon />
                             </IconButton>
                             <Typography gutterBottom variant="h6">
-                              {isSoldOut ? 'Sold Out' : '0'}
+                              {isSoldOut ? 'Sold Out' : item.qty}
                             </Typography>
                             <IconButton
                               className={classes.button}
                               aria-label="Add"
-                              disabled={isSoldOut}
+                              onClick={() => {
+                                cartAddItemSingle(id);
+                              }}
                             >
                               <AddIcon />
                             </IconButton>
@@ -106,15 +129,19 @@ class HomePage extends Component {
 HomePage.propTypes = {
   getItemsFromServer: PropTypes.func.isRequired,
   userToken: PropTypes.string,
-  items: PropTypes.array,
+  inventoryItems: PropTypes.array,
   isLoadingItems: PropTypes.bool,
   classes: PropTypes.object.isRequired,
+  cartAddItemSingle: PropTypes.func.isRequired,
+  cartRemoveItemSingle: PropTypes.func.isRequired,
+  cartItems: PropTypes.array,
 };
 
 HomePage.defaultProps = {
   userToken: null,
-  items: [],
+  inventoryItems: [],
   isLoadingItems: false,
+  cartItems: [],
 };
 
 const styles = (theme) => ({

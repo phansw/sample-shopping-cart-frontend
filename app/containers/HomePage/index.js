@@ -9,10 +9,15 @@ import {
   makeSelectError,
   makeSelectUserToken,
 } from 'containers/App/selectors';
-import { getItemsFromServer } from './actions';
+import {
+  getItemsFromServer,
+  cartAddItemSingle,
+  cartRemoveItemSingle,
+} from './actions';
 import {
   makeSelectInventoryItems,
   makeSelectInventoryIsLoading,
+  makeSelectCartItems,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -20,6 +25,8 @@ import HomePage from './HomePage';
 
 const mapDispatchToProps = (dispatch) => ({
   getItemsFromServer: (token) => dispatch(getItemsFromServer(token)),
+  cartAddItemSingle: (itemId) => dispatch(cartAddItemSingle(itemId)),
+  cartRemoveItemSingle: (itemId) => dispatch(cartRemoveItemSingle(itemId)),
 });
 
 const mapStateToProps = createStructuredSelector({
@@ -27,8 +34,9 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   error: makeSelectError(),
   userToken: makeSelectUserToken(),
-  items: makeSelectInventoryItems(),
+  inventoryItems: makeSelectInventoryItems(),
   isLoadingItems: makeSelectInventoryIsLoading(),
+  cartItems: makeSelectCartItems(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
