@@ -14,6 +14,8 @@ export const LOAD_REPOS_SUCCESS = 'boilerplate/App/LOAD_REPOS_SUCCESS';
 export const LOAD_REPOS_ERROR = 'boilerplate/App/LOAD_REPOS_ERROR';
 export const DEFAULT_LOCALE = 'en';
 
+export const ROOT_URL = 'http://localhost:3030';
+
 export const LOGIN_ATTEMPT = 'tcb/App/LOGIN_ATTEMPT';
 export const LOGIN_SUCCESS = 'tcb/App/LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'tcb/App/LOGIN_FAILURE';

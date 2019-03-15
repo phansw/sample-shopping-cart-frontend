@@ -1,11 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { LOGIN_ATTEMPT } from 'containers/App/constants';
+import { LOGIN_ATTEMPT, ROOT_URL } from 'containers/App/constants';
 import { loginSuccess, loginFailure } from 'containers/App/actions';
 
 import request from 'utils/request';
 
 export function* login({ username, password }) {
-  const requestURL = 'http://localhost:3030/authentication';
+  const requestURL = `${ROOT_URL}/authentication`;
   const body = {
     strategy: 'local',
     email: username,
