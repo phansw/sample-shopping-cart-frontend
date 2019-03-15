@@ -13,6 +13,7 @@ import {
   getItemsFromServer,
   cartAddItemSingle,
   cartRemoveItemSingle,
+  cartClear,
 } from './actions';
 import {
   makeSelectInventoryItems,
@@ -28,6 +29,7 @@ const mapDispatchToProps = (dispatch) => ({
   getItemsFromServer: (token) => dispatch(getItemsFromServer(token)),
   cartAddItemSingle: (itemId) => dispatch(cartAddItemSingle(itemId)),
   cartRemoveItemSingle: (itemId) => dispatch(cartRemoveItemSingle(itemId)),
+  cartClear: () => dispatch(cartClear()),
 });
 
 const mapStateToProps = createStructuredSelector({

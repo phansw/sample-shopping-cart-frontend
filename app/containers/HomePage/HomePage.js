@@ -24,7 +24,7 @@ class HomePage extends Component {
   render() {
     const {
       classes, inventoryItems, isLoadingItems, cartAddItemSingle, cartRemoveItemSingle,
-      cartItems, cartSubtotal, getItemsFromServer, userToken,
+      cartItems, cartSubtotal, getItemsFromServer, userToken, cartClear,
     } = this.props;
 
     const { isCheckingOut } = this.state;
@@ -106,6 +106,7 @@ class HomePage extends Component {
             description={'Complete your purchase!'}
             cartItems={cartItemsArray}
             onSuccess={() => {
+              cartClear();
               getItemsFromServer(userToken);
             }}
           />
