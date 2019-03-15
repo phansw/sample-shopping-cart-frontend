@@ -6,28 +6,29 @@ import injectSaga from 'utils/injectSaga';
 import {
   makeSelectRepos,
   makeSelectLoading,
-  makeSelectError
+  makeSelectError,
+  makeSelectUserToken,
 } from 'containers/App/selectors';
-import { loadRepos } from '../App/actions';
-import { changeUsername } from './actions';
-import { makeSelectUsername } from './selectors';
+import { getItemsFromServer } from './actions';
+import {
+  makeSelectInventoryItems,
+  makeSelectInventoryIsLoading,
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import HomePage from './HomePage';
 
 const mapDispatchToProps = (dispatch) => ({
-  onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
-  onSubmitForm: (evt) => {
-    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-    dispatch(loadRepos());
-  }
+  getItemsFromServer: (token) => dispatch(getItemsFromServer(token)),
 });
 
 const mapStateToProps = createStructuredSelector({
   repos: makeSelectRepos(),
-  username: makeSelectUsername(),
   loading: makeSelectLoading(),
-  error: makeSelectError()
+  error: makeSelectError(),
+  userToken: makeSelectUserToken(),
+  items: makeSelectInventoryItems(),
+  isLoadingItems: makeSelectInventoryIsLoading(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

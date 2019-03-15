@@ -1,77 +1,147 @@
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- */
-
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import ReposList from 'components/ReposList';
-import './style.scss';
+import classNames from 'classnames';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+import { withStyles } from '@material-ui/core/styles';
+import LoadingIndicator from 'components/LoadingIndicator';
 
-export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-  /**
-   * when initial state username is not null, submit the form to load repos
-   */
-  componentDidMount() {
-    const { username, onSubmitForm } = this.props;
-    if (username && username.trim().length > 0) {
-      onSubmitForm();
-    }
+class HomePage extends Component {
+  constructor(props) {
+    super(props);
+    props.getItemsFromServer(props.userToken);
   }
 
   render() {
-    const {
-      loading, error, repos, username, onChangeUsername, onSubmitForm
-    } = this.props;
-    const reposListProps = {
-      loading,
-      error,
-      repos
-    };
+    const { classes, items, isLoadingItems } = this.props;
+
+    if (isLoadingItems) {
+      return LoadingIndicator();
+    }
 
     return (
-      <article>
+      <React.Fragment>
         <Helmet>
-          <title>Home Page</title>
-          <meta name="description" content="A React.js Boilerplate application homepage" />
+          <title>Home</title>
+          <meta
+            name="Home Page"
+            content="Home Page of The Corner Bookstore"
+          />
         </Helmet>
-        <div className="home-page">
-          <section className="centered">
-            <h2>Start your next react project in seconds</h2>
-            <p>
-              A minimal <i>React-Redux</i> boilerplate with all the best practices
-            </p>
-          </section>
-          <section>
-            <h2>Try me!</h2>
-            <form onSubmit={onSubmitForm}>
-              <label htmlFor="username">
-                Show Github repositories by
-                <span className="at-prefix">@</span>
-                <input
-                  id="username"
-                  type="text"
-                  placeholder="flexdinesh"
-                  value={username}
-                  onChange={onChangeUsername}
-                />
-              </label>
-            </form>
-            <ReposList {...reposListProps} />
-          </section>
-        </div>
-      </article>
+        <CssBaseline />
+        <main>
+          <div className={classNames(classes.layout, classes.cardGrid)}>
+            <Grid container spacing={40}>
+              {items.toJS().map((item) => {
+                const isSoldOut = item.qty === 0;
+                const { _id: id } = item;
+
+                // @TODO refactor to a separate component
+                return (
+                  <Grid item key={id} sm={6} md={4} lg={3}>
+                    <Card
+                      className={classes.card}
+                      style={isSoldOut ? { opacity: 0.5 } : {}}
+                    >
+                      <CardMedia
+                        className={classes.cardMedia}
+                        image={item.images[0]}
+                        title={item.name}
+                      />
+                      <CardContent className={classes.cardContent}>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          {item.name}
+                        </Typography>
+                        <Typography>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </Typography>
+                        <Typography gutterBottom variant="subtitle1">
+                          {`Price: ${item.price.toFixed(2)}`}
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        {isSoldOut ? null : (
+                          <React.Fragment>
+                            <IconButton
+                              className={classes.button}
+                              aria-label="Remove"
+                              disabled={isSoldOut}
+                            >
+                              <RemoveIcon />
+                            </IconButton>
+                            <Typography gutterBottom variant="h6">
+                              {isSoldOut ? 'Sold Out' : '0'}
+                            </Typography>
+                            <IconButton
+                              className={classes.button}
+                              aria-label="Add"
+                              disabled={isSoldOut}
+                            >
+                              <AddIcon />
+                            </IconButton>
+                          </React.Fragment>
+                        )}
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </div>
+        </main>
+      </React.Fragment>
     );
   }
 }
 
 HomePage.propTypes = {
-  loading: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
-  onSubmitForm: PropTypes.func,
-  username: PropTypes.string,
-  onChangeUsername: PropTypes.func
+  getItemsFromServer: PropTypes.func.isRequired,
+  userToken: PropTypes.string,
+  items: PropTypes.array,
+  isLoadingItems: PropTypes.bool,
+  classes: PropTypes.object.isRequired,
 };
+
+HomePage.defaultProps = {
+  userToken: null,
+  items: [],
+  isLoadingItems: false,
+};
+
+const styles = (theme) => ({
+  layout: {
+    width: 'auto',
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
+      width: 1100,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  },
+  cardGrid: {
+    padding: `${theme.spacing.unit * 8}px 0`,
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+});
+
+export default withStyles(styles)(HomePage);
