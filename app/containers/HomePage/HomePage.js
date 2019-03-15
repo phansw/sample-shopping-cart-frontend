@@ -24,7 +24,7 @@ class HomePage extends Component {
   render() {
     const {
       classes, inventoryItems, isLoadingItems, cartAddItemSingle, cartRemoveItemSingle,
-      cartItems, cartSubtotal,
+      cartItems, cartSubtotal, getItemsFromServer, userToken,
     } = this.props;
 
     const { isCheckingOut } = this.state;
@@ -105,6 +105,9 @@ class HomePage extends Component {
             amount={cartSubtotal * 100}
             description={'Complete your purchase!'}
             cartItems={cartItemsArray}
+            onSuccess={() => {
+              getItemsFromServer(userToken);
+            }}
           />
         </main>
       </React.Fragment>

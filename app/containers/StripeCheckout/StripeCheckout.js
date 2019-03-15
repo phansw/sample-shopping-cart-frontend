@@ -69,7 +69,7 @@ class StripeCheckout extends Component {
   };
 
   createOrder(stripeToken) {
-    const { cartItems, amount, userToken } = this.props;
+    const { cartItems, amount, userToken, onSuccess } = this.props;
 
     const requestUrl = `${ROOT_URL}/orders`;
     const body = {
@@ -86,6 +86,8 @@ class StripeCheckout extends Component {
         'Content-Type': 'application/json',
         Authorization: userToken,
       },
+    }).then(() => {
+      onSuccess();
     });
   }
 
