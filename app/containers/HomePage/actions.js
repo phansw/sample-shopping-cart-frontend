@@ -5,6 +5,7 @@ import {
   CART_ADD_ITEM_SINGLE,
   CART_REMOVE_ITEM_SINGLE,
   CART_REMOVE_ITEM_ALL,
+  CART_CLEAR,
 } from './constants';
 
 export function getItemsFromServer(token) {
@@ -46,5 +47,11 @@ export function cartRemoveItemAll(itemId) {
   return {
     type: CART_REMOVE_ITEM_ALL,
     itemId,
+  };
+}
+
+export function cartClear() {
+  return {
+    type: CART_CLEAR,
   };
 }

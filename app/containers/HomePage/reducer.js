@@ -5,6 +5,7 @@ import {
   SET_ITEM_LOADING_STATUS,
   CART_ADD_ITEM_SINGLE,
   CART_REMOVE_ITEM_SINGLE,
+  CART_CLEAR,
 } from './constants';
 
 const initialState = fromJS({
@@ -72,6 +73,8 @@ function homeReducer(state = initialState, action) {
       return cartAddItemSingleReducer(state, action.itemId);
     case CART_REMOVE_ITEM_SINGLE:
       return cartRemoveItemSingleReducer(state, action.itemId);
+    case CART_CLEAR:
+      return state.setIn(['cart', 'items'], fromJS([]));
     default:
       return state;
   }
