@@ -14,6 +14,8 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { withStyles } from '@material-ui/core/styles';
 import LoadingIndicator from 'components/LoadingIndicator';
+import Fab from '@material-ui/core/Fab';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 class HomePage extends Component {
   constructor(props) {
@@ -36,6 +38,8 @@ class HomePage extends Component {
       const { _id: id } = item;
       cartItemsObject[id] = { ...item };
     });
+
+    const isCartEmpty = cartItems.size === 0;
 
     // update qty in inventory items to reflect cart qty instead of stock qty
     const items = inventoryItems.toJS().map((item) => {
@@ -119,6 +123,16 @@ class HomePage extends Component {
                 );
               })}
             </Grid>
+            <Fab
+              aria-label="Check out"
+              variant="extended"
+              className={classes.checkoutButton}
+              disabled={isCartEmpty}
+              color="primary"
+            >
+              <ShoppingCartIcon />
+              Checkout
+            </Fab>
           </div>
         </main>
       </React.Fragment>
@@ -168,6 +182,14 @@ const styles = (theme) => ({
   },
   cardContent: {
     flexGrow: 1,
+  },
+  checkoutButton: {
+    margin: 0,
+    top: 'auto',
+    right: 20,
+    bottom: 20,
+    left: 'auto',
+    position: 'fixed',
   },
 });
 
