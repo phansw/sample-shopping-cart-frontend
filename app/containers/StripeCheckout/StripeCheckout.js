@@ -69,7 +69,7 @@ class StripeCheckout extends Component {
   };
 
   createOrder(stripeToken) {
-    const { cartItems, amount, userToken, onSuccess } = this.props;
+    const { cartItems, amount, userToken, onSuccess, onFail } = this.props;
 
     const requestUrl = `${ROOT_URL}/orders`;
     const body = {
@@ -88,6 +88,8 @@ class StripeCheckout extends Component {
       },
     }).then(() => {
       onSuccess();
+    }).catch((e) => {
+      onFail(e);
     });
   }
 
@@ -101,6 +103,8 @@ StripeCheckout.propTypes = {
   userToken: PropTypes.string.isRequired,
   amount: PropTypes.number,
   onClose: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onFail: PropTypes.func.isRequired,
 };
 
 StripeCheckout.defaultProps = {

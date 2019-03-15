@@ -10,10 +10,13 @@ import Fab from '@material-ui/core/Fab';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ItemCard from 'components/ItemCard';
 import StripeCheckout from 'containers/StripeCheckout';
+import PurchaseSnackbar from 'components/PurchaseSnackbar';
 
 class HomePage extends Component {
   state = {
     isCheckingOut: false,
+    isPurchaseComplete: false,
+    isPurchaseSuccessful: false,
   };
 
   constructor(props) {
@@ -21,13 +24,41 @@ class HomePage extends Component {
     props.getItemsFromServer(props.userToken);
   }
 
+  onPurchaseSuccess = () => {
+    const { getItemsFromServer, userToken, cartClear } = this.props;
+
+    cartClear();
+    getItemsFromServer(userToken);
+    this.setState({
+      isPurchaseComplete: true,
+      isPurchaseSuccessful: true,
+    });
+    setTimeout(() => {
+      this.setState({
+        isPurchaseComplete: false,
+      });
+    }, 5000);
+  };
+
+  onPurchaseFail = () => {
+    this.setState({
+      isPurchaseComplete: true,
+      isPurchaseSuccessful: false,
+    });
+    setTimeout(() => {
+      this.setState({
+        isPurchaseComplete: false,
+      });
+    }, 5000);
+  };
+
   render() {
     const {
       classes, inventoryItems, isLoadingItems, cartAddItemSingle, cartRemoveItemSingle,
-      cartItems, cartSubtotal, getItemsFromServer, userToken, cartClear,
+      cartItems, cartSubtotal,
     } = this.props;
 
-    const { isCheckingOut } = this.state;
+    const { isCheckingOut, isPurchaseComplete, isPurchaseSuccessful } = this.state;
 
     if (isLoadingItems) {
       return LoadingIndicator();
@@ -105,12 +136,14 @@ class HomePage extends Component {
             amount={cartSubtotal * 100}
             description={'Complete your purchase!'}
             cartItems={cartItemsArray}
-            onSuccess={() => {
-              cartClear();
-              getItemsFromServer(userToken);
-            }}
+            onSuccess={this.onPurchaseSuccess}
+            onFail={this.onPurchaseFail}
           />
         </main>
+        <PurchaseSnackbar
+          open={isPurchaseComplete}
+          isSuccess={isPurchaseSuccessful}
+        />
       </React.Fragment>
     );
   }
