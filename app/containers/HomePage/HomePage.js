@@ -2,20 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import classNames from 'classnames';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 import { withStyles } from '@material-ui/core/styles';
 import LoadingIndicator from 'components/LoadingIndicator';
 import Fab from '@material-ui/core/Fab';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ItemCard from 'components/ItemCard';
 
 class HomePage extends Component {
   constructor(props) {
@@ -42,13 +35,16 @@ class HomePage extends Component {
     const isCartEmpty = cartItems.size === 0;
 
     // update qty in inventory items to reflect cart qty instead of stock qty
+    // map to match props of ItemCard component
     const items = inventoryItems.toJS().map((item) => {
       const { _id: id } = item;
       const cartQty = cartItemsObject[id] === undefined ? 0 : cartItemsObject[id].qty;
       return {
         ...item,
-        qty: cartQty,
+        id,
+        cartQty,
         isSoldOut: item.qty === 0,
+        image: item.images[0],
       };
     });
 
@@ -65,63 +61,18 @@ class HomePage extends Component {
         <main>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <Grid container spacing={40}>
-              {items.map((item) => {
-                const { _id: id, isSoldOut } = item;
-
-                // @TODO refactor to a separate component
-                return (
-                  <Grid item key={id} sm={6} md={4} lg={3}>
-                    <Card
-                      className={classes.card}
-                      style={isSoldOut ? { opacity: 0.5 } : {}}
-                    >
-                      <CardMedia
-                        className={classes.cardMedia}
-                        image={item.images[0]}
-                        title={item.name}
-                      />
-                      <CardContent className={classes.cardContent}>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          {item.name}
-                        </Typography>
-                        <Typography>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </Typography>
-                        <Typography gutterBottom variant="subtitle1">
-                          {`Price: ${item.price.toFixed(2)}`}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        {isSoldOut ? null : (
-                          <React.Fragment>
-                            <IconButton
-                              className={classes.button}
-                              aria-label="Remove"
-                              onClick={() => {
-                                cartRemoveItemSingle(id);
-                              }}
-                            >
-                              <RemoveIcon />
-                            </IconButton>
-                            <Typography gutterBottom variant="h6">
-                              {isSoldOut ? 'Sold Out' : item.qty}
-                            </Typography>
-                            <IconButton
-                              className={classes.button}
-                              aria-label="Add"
-                              onClick={() => {
-                                cartAddItemSingle(id);
-                              }}
-                            >
-                              <AddIcon />
-                            </IconButton>
-                          </React.Fragment>
-                        )}
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                );
-              })}
+              {items.map((item) => (
+                <ItemCard
+                  key={item.id}
+                  onAddItem={() => {
+                    cartAddItemSingle(item.id);
+                  }}
+                  onRemoveItem={() => {
+                    cartRemoveItemSingle(item.id);
+                  }}
+                  {...item}
+                />
+              ))}
             </Grid>
             <Fab
               aria-label="Check out"
@@ -171,17 +122,6 @@ const styles = (theme) => ({
   },
   cardGrid: {
     padding: `${theme.spacing.unit * 8}px 0`,
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
   },
   checkoutButton: {
     margin: 0,
