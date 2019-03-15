@@ -3,12 +3,7 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import {
-  makeSelectRepos,
-  makeSelectLoading,
-  makeSelectError,
-  makeSelectUserToken,
-} from 'containers/App/selectors';
+import { makeSelectUserToken } from 'containers/App/selectors';
 import {
   getItemsFromServer,
   cartAddItemSingle,
@@ -33,9 +28,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = createStructuredSelector({
-  repos: makeSelectRepos(),
-  loading: makeSelectLoading(),
-  error: makeSelectError(),
   userToken: makeSelectUserToken(),
   inventoryItems: makeSelectInventoryItems(),
   isLoadingItems: makeSelectInventoryIsLoading(),
