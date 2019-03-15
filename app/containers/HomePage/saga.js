@@ -28,6 +28,6 @@ export function* getItemsFromServer({ token }) {
   }
 }
 
-export default function* githubData() {
+export default function* watchGetItemsFromServer() {
   yield takeLatest(GET_ITEMS_FROM_SERVER, getItemsFromServer);
 }
