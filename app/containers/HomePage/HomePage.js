@@ -9,8 +9,13 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import Fab from '@material-ui/core/Fab';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ItemCard from 'components/ItemCard';
+import StripeCheckout from 'containers/StripeCheckout';
 
 class HomePage extends Component {
+  state = {
+    isCheckingOut: false,
+  };
+
   constructor(props) {
     super(props);
     props.getItemsFromServer(props.userToken);
@@ -19,15 +24,18 @@ class HomePage extends Component {
   render() {
     const {
       classes, inventoryItems, isLoadingItems, cartAddItemSingle, cartRemoveItemSingle,
-      cartItems,
+      cartItems, cartSubtotal,
     } = this.props;
+
+    const { isCheckingOut } = this.state;
 
     if (isLoadingItems) {
       return LoadingIndicator();
     }
 
     const cartItemsObject = {};
-    cartItems.toJS().forEach((item) => {
+    const cartItemsArray = cartItems.toJS();
+    cartItemsArray.forEach((item) => {
       const { _id: id } = item;
       cartItemsObject[id] = { ...item };
     });
@@ -81,11 +89,23 @@ class HomePage extends Component {
               className={classes.checkoutButton}
               disabled={isCartEmpty}
               color="primary"
+              onClick={() => {
+                this.setState({ isCheckingOut: true });
+              }}
             >
               <ShoppingCartIcon style={{ marginRight: 8 }} />
               Checkout
             </Fab>
           </div>
+          <StripeCheckout
+            isOpen={isCheckingOut}
+            onClose={() => {
+              this.setState({ isCheckingOut: false });
+            }}
+            amount={cartSubtotal * 100}
+            description={'Complete your purchase!'}
+            cartItems={cartItemsArray}
+          />
         </main>
       </React.Fragment>
     );
