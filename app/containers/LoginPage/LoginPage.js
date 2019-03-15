@@ -1,67 +1,110 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { Redirect } from 'react-router-dom';
 
-const LoginPage = ({ classes }) => {
-  return (
-    <main className={classes.main}>
-      <Helmet>
-        <title>Login</title>
-        <meta
-          name="description"
-          content="Step in to your local corner bookstore"
-        />
-      </Helmet>
-      <CssBaseline />
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form}>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Email Address</InputLabel>
-            <Input id="email" name="email" autoComplete="email" autoFocus />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <Input name="password" type="password" id="password" autoComplete="current-password" />
-          </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+class LoginPage extends Component {
+  state = {
+    username: '',
+    password: '',
+  };
+
+  updateUsername(e) {
+    this.setState({
+      username: e.target.value,
+    });
+  }
+
+  updatePassword(e) {
+    this.setState({
+      password: e.target.value,
+    });
+  }
+
+  render() {
+    const {
+      classes, onLoginAttempt, isLoggingIn, isLoginFail, isLoggedIn, isNotLoggedIn,
+    } = this.props;
+    const { username, password } = this.state;
+
+    if (isLoggedIn) {
+      return (<Redirect to="/" />);
+    }
+
+    return (
+      <main className={classes.main}>
+        <Helmet>
+          <title>Login</title>
+          <meta
+            name="description"
+            content="Step in to your local corner bookstore"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+        </Helmet>
+        <CssBaseline />
+        <Paper className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
             Sign in
-          </Button>
-        </form>
-      </Paper>
-    </main>
-  );
-};
+          </Typography>
+          <form className={classes.form}>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="email">Email Address</InputLabel>
+              <Input
+                id="email"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={username}
+                onChange={(e) => this.updateUsername(e)}
+              />
+            </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <Input
+                name="password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={(e) => this.updatePassword(e)}
+              />
+            </FormControl>
+            {/*<FormControlLabel*/}
+            {/*control={<Checkbox value="remember" color="primary" />}*/}
+            {/*label="Remember me"*/}
+            {/*/>*/}
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={() => {
+                onLoginAttempt(username, password);
+              }}
+            >
+              Sign in
+            </Button>
+          </form>
+        </Paper>
+      </main>
+    );
+  }
+}
 
 LoginPage.propTypes = {
   classes: PropTypes.object.isRequired,
+  onLoginAttempt: PropTypes.func.isRequired,
 };
 
 const styles = (theme) => ({
