@@ -4,6 +4,8 @@ import request from 'utils/request';
 import { ROOT_URL } from 'containers/App/constants';
 
 class StripeCheckout extends Component {
+  static currency = 'sgd';
+
   static loadStripe(onLoad) {
     if (!window.StripeCheckout) {
       const script = document.createElement('script');
@@ -62,7 +64,7 @@ class StripeCheckout extends Component {
     this.stripeHandler.open({
       name: 'The Corner Bookstore',
       description: 'Complete your purchase!',
-      currency: 'sgd',
+      currency: StripeCheckout.currency,
       amount,
       allowRememberMe: false,
     });
@@ -75,6 +77,7 @@ class StripeCheckout extends Component {
     const body = {
       items: cartItems,
       amount,
+      currency: StripeCheckout.currency,
       stripeToken: stripeToken.id,
       Authorization: userToken,
     };
