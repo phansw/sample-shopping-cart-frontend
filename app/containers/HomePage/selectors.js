@@ -12,8 +12,14 @@ const makeSelectInventoryIsLoading = () => createSelector(
   (homeState) => homeState.getIn(['inventory', 'isLoading']),
 );
 
+const makeSelectCartItems = () => createSelector(
+  selectHome,
+  (homeState) => homeState.getIn(['cart', 'items']),
+);
+
 export {
   selectHome,
   makeSelectInventoryItems,
   makeSelectInventoryIsLoading,
+  makeSelectCartItems,
 };
