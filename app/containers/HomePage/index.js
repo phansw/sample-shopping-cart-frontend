@@ -18,6 +18,7 @@ import {
   makeSelectInventoryItems,
   makeSelectInventoryIsLoading,
   makeSelectCartItems,
+  makeSelectCartSubtotal,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -37,6 +38,7 @@ const mapStateToProps = createStructuredSelector({
   inventoryItems: makeSelectInventoryItems(),
   isLoadingItems: makeSelectInventoryIsLoading(),
   cartItems: makeSelectCartItems(),
+  cartSubtotal: makeSelectCartSubtotal(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
