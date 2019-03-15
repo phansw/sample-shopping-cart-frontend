@@ -1,40 +1,33 @@
-/**
- * Gets the repositories of the user from Github
- */
-
-import {
-  call, put, select, takeLatest
-} from 'redux-saga/effects';
-import { LOAD_REPOS } from 'containers/App/constants';
-import { reposLoaded, repoLoadingError } from 'containers/App/actions';
-
+import { fromJS } from 'immutable';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { ROOT_URL } from 'containers/App/constants';
 import request from 'utils/request';
-import { makeSelectUsername } from 'containers/HomePage/selectors';
+import { GET_ITEMS_FROM_SERVER } from './constants';
+import { setItems, setItemLoadingStatus } from './actions';
 
-/**
- * Github repos request/response handler
- */
-export function* getRepos() {
-  // Select username from store
-  const username = yield select(makeSelectUsername());
-  const requestURL = `https://api.github.com/users/${username}/repos?type=all&sort=updated`;
+export function* getItemsFromServer({ token }) {
+  yield put(setItemLoadingStatus(true));
+
+  const requestUrl = `${ROOT_URL}/inventory`;
 
   try {
-    // Call our request helper (see 'utils/request')
-    const repos = yield call(request, requestURL);
-    yield put(reposLoaded(repos, username));
-  } catch (err) {
-    yield put(repoLoadingError(err));
+    const { data } = yield call(request, requestUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    });
+
+    yield put(setItemLoadingStatus(false));
+
+    if (data) yield put(setItems(fromJS(data)));
+    else yield put(setItems(fromJS([])));
+  } catch (e) {
+    yield put(setItemLoadingStatus(false));
+    yield put(setItems(fromJS([])));
   }
 }
 
-/**
- * Root saga manages watcher lifecycle
- */
 export default function* githubData() {
-  // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
-  // By using `takeLatest` only the result of the latest API call is applied.
-  // It returns task descriptor (just like fork) so we can continue execution
-  // It will be cancelled automatically on component unmount
-  yield takeLatest(LOAD_REPOS, getRepos);
+  yield takeLatest(GET_ITEMS_FROM_SERVER, getItemsFromServer);
 }

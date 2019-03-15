@@ -1,17 +1,19 @@
-/**
- * Homepage selectors
- */
-
 import { createSelector } from 'reselect';
 
 const selectHome = (state) => state.get('home');
 
-const makeSelectUsername = () => createSelector(
+const makeSelectInventoryItems = () => createSelector(
   selectHome,
-  (homeState) => homeState.get('username')
+  (homeState) => homeState.getIn(['inventory', 'items']),
+);
+
+const makeSelectInventoryIsLoading = () => createSelector(
+  selectHome,
+  (homeState) => homeState.getIn(['inventory', 'isLoading']),
 );
 
 export {
   selectHome,
-  makeSelectUsername,
+  makeSelectInventoryItems,
+  makeSelectInventoryIsLoading,
 };
