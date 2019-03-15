@@ -14,7 +14,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const ItemCard = (
   {
-    id, image, name, price, isSoldOut, cartQty, onAddItem, onRemoveItem, classes,
+    id, image, name, price, isSoldOut, stockQty, cartQty, onAddItem, onRemoveItem, classes,
   }
 ) => (
   <Grid item key={id} sm={6} md={4} lg={3}>
@@ -36,7 +36,7 @@ const ItemCard = (
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </Typography>
         <Typography gutterBottom variant="subtitle1">
-          {`Price: ${price.toFixed(2)}`}
+          {`Price: ${price.toFixed(2)} | Stock: ${stockQty}`}
         </Typography>
       </CardContent>
       <CardActions>
@@ -91,6 +91,7 @@ ItemCard.propTypes = {
   price: PropTypes.number.isRequired,
   isSoldOut: PropTypes.bool.isRequired,
   cartQty: PropTypes.number.isRequired,
+  stockQty: PropTypes.number.isRequired,
   onAddItem: PropTypes.func.isRequired,
   onRemoveItem: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,

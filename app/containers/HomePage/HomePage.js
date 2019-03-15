@@ -43,6 +43,7 @@ class HomePage extends Component {
         ...item,
         id,
         cartQty,
+        stockQty: item.qty,
         isSoldOut: item.qty === 0,
         image: item.images[0],
       };
