@@ -3,6 +3,7 @@
  */
 
 import { createSelector } from 'reselect';
+import { LOGIN_STATUS } from './constants';
 
 const selectGlobal = (state) => state.get('global');
 
@@ -33,6 +34,39 @@ const makeSelectLocation = () => createSelector(
   (routeState) => routeState.get('location').toJS()
 );
 
+/*
+  User state selectors
+ */
+const makeSelectUsername = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn(['user', 'username']),
+);
+
+const makeSelectUserToken = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn(['user', 'token']),
+);
+
+const makeSelectIsUserLoggingIn = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn(['user', 'loginStatus']) === LOGIN_STATUS.PENDING,
+);
+
+const makeSelectIsUserLoggedIn = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn(['user', 'loginStatus']) === LOGIN_STATUS.SUCCESS,
+);
+
+const makeSelectIsUserLoginFail = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn(['user', 'loginStatus']) === LOGIN_STATUS.FAILURE,
+);
+
+const makeSelectIsUserNotLoggedIn = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn(['user', 'loginStatus']) === LOGIN_STATUS.NULL,
+);
+
 export {
   selectGlobal,
   makeSelectCurrentUser,
@@ -40,4 +74,10 @@ export {
   makeSelectError,
   makeSelectRepos,
   makeSelectLocation,
+  makeSelectUsername,
+  makeSelectUserToken,
+  makeSelectIsUserLoggingIn,
+  makeSelectIsUserLoggedIn,
+  makeSelectIsUserLoginFail,
+  makeSelectIsUserNotLoggedIn,
 };
