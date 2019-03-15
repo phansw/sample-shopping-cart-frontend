@@ -11,6 +11,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ItemCard from 'components/ItemCard';
 import StripeCheckout from 'containers/StripeCheckout';
 import PurchaseSnackbar from 'components/PurchaseSnackbar';
+import { Redirect } from 'react-router-dom';
 
 class HomePage extends Component {
   state = {
@@ -55,8 +56,10 @@ class HomePage extends Component {
   render() {
     const {
       classes, inventoryItems, isLoadingItems, cartAddItemSingle, cartRemoveItemSingle,
-      cartItems, cartSubtotal,
+      cartItems, cartSubtotal, userToken,
     } = this.props;
+
+    if (!userToken || userToken.length === 0) return (<Redirect to="/login" />);
 
     const { isCheckingOut, isPurchaseComplete, isPurchaseSuccessful } = this.state;
 
