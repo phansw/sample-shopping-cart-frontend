@@ -81,7 +81,7 @@ class HomePage extends Component {
               disabled={isCartEmpty}
               color="primary"
             >
-              <ShoppingCartIcon />
+              <ShoppingCartIcon style={{ marginRight: 8 }} />
               Checkout
             </Fab>
           </div>
