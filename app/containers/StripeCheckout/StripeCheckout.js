@@ -71,7 +71,9 @@ class StripeCheckout extends Component {
   };
 
   createOrder(stripeToken) {
-    const { cartItems, amount, userToken, onSuccess, onFail } = this.props;
+    const {
+      cartItems, amount, userToken, onSuccess, onFail,
+    } = this.props;
 
     const requestUrl = `${ROOT_URL}/orders`;
     const body = {
