@@ -8,10 +8,11 @@ import {
   CART_CLEAR,
 } from './constants';
 
-export function getItemsFromServer(token) {
+export function getItemsFromServer(token, shouldShowLoader = true) {
   return {
     type: GET_ITEMS_FROM_SERVER,
     token,
+    shouldShowLoader,
   };
 }
 

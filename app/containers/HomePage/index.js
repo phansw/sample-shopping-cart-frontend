@@ -21,7 +21,9 @@ import saga from './saga';
 import HomePage from './HomePage';
 
 const mapDispatchToProps = (dispatch) => ({
-  getItemsFromServer: (token) => dispatch(getItemsFromServer(token)),
+  getItemsFromServer: (token, shouldShowLoader) => {
+    dispatch(getItemsFromServer(token, shouldShowLoader));
+  },
   cartAddItemSingle: (itemId) => dispatch(cartAddItemSingle(itemId)),
   cartRemoveItemSingle: (itemId) => dispatch(cartRemoveItemSingle(itemId)),
   cartClear: () => dispatch(cartClear()),

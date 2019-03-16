@@ -5,8 +5,8 @@ import request from 'utils/request';
 import { GET_ITEMS_FROM_SERVER } from './constants';
 import { setItems, setItemLoadingStatus } from './actions';
 
-export function* getItemsFromServer({ token }) {
-  yield put(setItemLoadingStatus(true));
+export function* getItemsFromServer({ token, shouldShowLoader }) {
+  if (shouldShowLoader) yield put(setItemLoadingStatus(true));
 
   const requestUrl = `${ROOT_URL}/inventory`;
 

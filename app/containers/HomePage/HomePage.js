@@ -29,7 +29,7 @@ class HomePage extends Component {
     const { getItemsFromServer, userToken, cartClear } = this.props;
 
     cartClear();
-    getItemsFromServer(userToken);
+    getItemsFromServer(userToken, false);
     this.setState({
       isPurchaseComplete: true,
       isPurchaseSuccessful: true,
