@@ -33,7 +33,7 @@ class LoginPage extends Component {
 
   render() {
     const {
-      classes, onLoginAttempt, isLoggingIn, isLoginFail, isLoggedIn, isNotLoggedIn,
+      classes, onLoginAttempt, isLoggedIn,
     } = this.props;
     const { username, password } = this.state;
 
@@ -105,6 +105,7 @@ class LoginPage extends Component {
 LoginPage.propTypes = {
   classes: PropTypes.object.isRequired,
   onLoginAttempt: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
 };
 
 const styles = (theme) => ({
