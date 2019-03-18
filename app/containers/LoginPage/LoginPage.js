@@ -31,6 +31,15 @@ class LoginPage extends Component {
     });
   }
 
+  onInputEnter = (e) => {
+    if (e.key === 'Enter') {
+      const { onLoginAttempt } = this.props;
+      const { username, password } = this.state;
+      e.preventDefault();
+      onLoginAttempt(username, password);
+    }
+  };
+
   render() {
     const {
       classes, onLoginAttempt, isLoggedIn,
@@ -68,6 +77,7 @@ class LoginPage extends Component {
                 autoFocus
                 value={username}
                 onChange={(e) => this.updateUsername(e)}
+                onKeyPress={this.onInputEnter}
               />
             </FormControl>
             <FormControl margin="normal" required fullWidth>
@@ -78,6 +88,7 @@ class LoginPage extends Component {
                 id="password"
                 autoComplete="current-password"
                 onChange={(e) => this.updatePassword(e)}
+                onKeyPress={this.onInputEnter}
               />
             </FormControl>
             {/*<FormControlLabel*/}
